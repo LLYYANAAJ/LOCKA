@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجوزاتي - LOCKA</title>
+    <!-- استدعاء أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #1e293b;
+            padding-bottom: 50px;
+        }
+
+        /* الهيدر العلوي */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* اللوقو في أقصى اليمين */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            order: 1;
+        }
+
+        .logo-svg-embedded {
+            height: 48px;
+            width: auto;
+            display: block;
+        }
+
+        /* زر القائمة فوق يسار */
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #0b2545;
+            cursor: pointer;
+            padding: 4px;
+            order: 2;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 14px 25px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0b2545;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #f1f5f9;
+        }
+
+        .sidebar .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        /* المحتوى الرئيسي للموقع */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 20px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0b2545;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        /* التبويبات */
+        .tabs-container {
+            background-color: #e2e8f0;
+            padding: 4px;
+            border-radius: 12px;
+            display: flex;
+            max-width: 360px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 9px 0;
+            border: none;
+            background: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: #ffffff;
+            color: #0b2545;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0b2545;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bookings-count {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: normal;
+        }
+
+        /* شبكة بطاقات الحجز على اللابتوب والجوال */
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 18px;
+        }
+
+        /* بطاقة الحجز */
+        .booking-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .college-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .college-icon {
+            width: 42px;
+            height: 42px;
+            background-color: #f1f5f9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b2545;
+            font-size: 18px;
+        }
+
+        .college-title-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .college-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0b2545;
+        }
+
+        .locker-num-sub {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-expired {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+
+        /* تفاصيل شبكة المعلومات */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .detail-box {
+            background-color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .detail-label {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        /* الأزرار */
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #0b2545;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #133a68;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #0b2545;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* النافذة المنبثقة لرمز الدخول */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 22px;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0b2545;
+        }
+
+        .close-modal-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .qr-card-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* QR واقعي جداً وشكلي تماماً لا يفتح أي رابط */
+        .realistic-qr-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 14px;
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .qr-matrix {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(25, 1fr);
+            grid-template-rows: repeat(25, 1fr);
+            background-color: #ffffff;
+        }
+
+        .q-cell {
+            background-color: #ffffff;
+        }
+
+        .q-black {
+            background-color: #0b2545;
+        }
+
+        .qr-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .pin-code {
+            font-size: 26px;
+            font-weight: 900;
+            color: #0b2545;
+            letter-spacing: 5px;
+            margin-bottom: 6px;
+        }
+
+        .pin-hint {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر العلوي -->
+    <header>
+        <!-- اللوقو مدمج بأسلوب SVG لضمان الظهور الفوري بنفس شكل وحجم اللوقو في صفحة الدفع -->
+        <div class="logo-container">
+            <svg class="logo-svg-embedded" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+                <!-- أجزاء اللوكر -->
+                <rect x="15" y="10" width="80" height="42" rx="6" fill="#0b2545"/>
+                <circle cx="25" cy="18" r="2" fill="#ffffff"/>
+                <circle cx="31" cy="18" r="2" fill="#ffffff"/>
+                <circle cx="37" cy="18" r="2" fill="#ffffff"/>
+                <rect x="43" y="15" width="30" height="6" rx="3" fill="none" stroke="#ffffff" stroke-width="1"/>
+                <line x1="15" y1="24" x2="95" y2="24" stroke="#ffffff" stroke-width="1"/>
+                <line x1="41" y1="24" x2="41" y2="52" stroke="#ffffff" stroke-width="1"/>
+                <line x1="68" y1="24" x2="68" y2="52" stroke="#ffffff" stroke-width="1"/>
+                
+                <rect x="22" y="30" width="8" height="2" rx="1" fill="#ffffff"/>
+                <rect x="22" y="34" width="8" height="2" rx="1" fill="#ffffff"/>
+                <rect x="22" y="40" width="2" height="5" rx="1" fill="#ffffff"/>
+
+                <rect x="48" y="30" width="8" height="2" rx="1" fill="#ffffff"/>
+                <rect x="48" y="34" width="8" height="2" rx="1" fill="#ffffff"/>
+                <rect x="48" y="40" width="2" height="5" rx="1" fill="#ffffff"/>
+
+                <rect x="75" y="30" width="8" height="2" rx="1" fill="#ffffff"/>
+                <rect x="75" y="34" width="8" height="2" rx="1" fill="#ffffff"/>
+                <rect x="75" y="40" width="2" height="5" rx="1" fill="#ffffff"/>
+
+                <!-- مؤشر الماوس -->
+                <g transform="translate(62, 22)">
+                    <path d="M 8 12 L 20 28 L 14 30 L 18 39 L 14 41 L 10 32 L 4 35 Z" fill="#0b2545" stroke="#ffffff" stroke-width="1.5"/>
+                </g>
+
+                <!-- نص locka المتناسق والمعزز -->
+                <text x="14" y="82" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="30" fill="#0b2545" letter-spacing="-0.5">l</text>
+                
+                <!-- القفل داخل حرف o -->
+                <g transform="translate(26, 58)">
+                    <circle cx="11" cy="11" r="10" fill="#0b2545"/>
+                    <path d="M 11 5 C 8 5 6.5 7 6.5 9.5 L 6.5 12 L 15.5 12 L 15.5 9.5 C 15.5 7 14 5 11 5 Z" fill="#ffffff"/>
+                    <polygon points="8,12 14,12 15.5,17 6.5,17" fill="#ffffff"/>
+                </g>
+
+                <text x="49" y="82" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="30" fill="#0b2545" letter-spacing="-0.5">cka</text>
+            </svg>
+        </div>
+
+        <!-- زر القائمة فوق يسار -->
+        <button class="menu-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- القائمة الجانبية -->
+    <div id="mySidebar" class="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+        <a href="#"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="#"><i class="fa-solid fa-lock"></i> حجوزاتي</a>
+        <a href="#"><i class="fa-solid fa-bell"></i> التنبيهات</a>
+        <a href="#"><i class="fa-solid fa-headset"></i> الدعم والمساعدة</a>
+        <a href="#"><i class="fa-solid fa-user"></i> حسابي</a>
+    </div>
+
+    <!-- المحتوى الرئيسي للموقع -->
+    <div class="container">
+        <h1 class="page-title">حجوزاتي</h1>
+        <p class="page-subtitle">جميع الحجوزات الخاصة بك في مكان واحد</p>
+
+        <!-- التبويبات -->
+        <div class="tabs-container">
+            <button class="tab-btn active" id="tab-active-btn" onclick="switchTab('active')">الحالية</button>
+            <button class="tab-btn" id="tab-past-btn" onclick="switchTab('past')">السابقة</button>
+        </div>
+
+        <!-- قسم الحجوزات الحالية -->
+        <div id="active-bookings">
+            <div class="section-header">
+                <span>الحجوزات الحالية</span>
+                <span class="bookings-count">8 حجوزات</span>
+            </div>
+            <div id="active-list" class="bookings-grid"></div>
+        </div>
+
+        <!-- قسم الحجوزات السابقة -->
+        <div id="past-bookings" style="display: none;">
+            <div class="section-header">
+                <span>الحجوزات السابقة</span>
+                <span class="bookings-count">8 حجوزات</span>
+            </div>
+            <div id="past-list" class="bookings-grid"></div>
+        </div>
+    </div>
+
+    <!-- النافذة المنبثقة لرمز الدخول -->
+    <div class="modal-overlay" id="qrModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">رمز الدخول</div>
+                <button class="close-modal-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="qr-card-box">
+                <!-- QR Code حقيقي وشكلي بدون روابط -->
+                <div class="realistic-qr-container">
+                    <div class="qr-matrix" id="qrMatrix"></div>
+                </div>
+                <div class="qr-subtitle" id="modal-college-name">الكلية العلمية بالرس — لوكر 8</div>
+                <div class="pin-code" id="modal-pin-code">4 8 2 7</div>
+                <div class="pin-hint">استخدم الرمز السري الموضح أعلاه لفتح اللوكر</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colleges = [
+            { name: "الكلية العلمية بالرس", building: "مبنى F1" },
+            { name: "الكلية الأدبية بالرس", building: "مبنى F2" },
+            { name: "كلية العلوم", building: "مبنى F3" },
+            { name: "كلية الإدارة والاقتصاد", building: "مبنى F4" },
+            { name: "كلية الحاسب", building: "مبنى F5" },
+            { name: "كلية الشريعة", building: "مبنى F6" },
+            { name: "كلية الزراعة", building: "مبنى F7" },
+            { name: "كلية العمارة والتخطيط", building: "مبنى F8" }
+        ];
+
+        const activeDates = [
+            { date: "2026/09/15", time: "08:00 ص - 12:00 م" },
+            { date: "2026/09/20", time: "10:00 ص - 01:00 م" },
+            { date: "2026/09/25", time: "09:00 ص - 02:00 م" },
+            { date: "2026/09/28", time: "08:00 ص - 11:00 ص" },
+            { date: "2026/10/02", time: "11:00 ص - 03:00 م" },
+            { date: "2026/10/08", time: "09:30 ص - 01:30 م" },
+            { date: "2026/10/14", time: "08:30 ص - 12:30 م" },
+            { date: "2026/10/22", time: "10:00 ص - 02:00 م" }
+        ];
+
+        const pastDates = [
+            { date: "2026/09/01", time: "10:00 ص - 12:00 م" },
+            { date: "2026/09/03", time: "08:00 ص - 11:00 ص" },
+            { date: "2026/09/05", time: "09:00 ص - 01:00 م" },
+            { date: "2026/09/07", time: "11:00 ص - 02:00 م" },
+            { date: "2026/09/09", time: "08:30 ص - 12:30 م" },
+            { date: "2026/09/10", time: "10:00 ص - 01:00 م" },
+            { date: "2026/09/11", time: "09:00 ص - 12:00 م" },
+            { date: "2026/09/12", time: "08:00 ص - 11:30 ص" }
+        ];
+
+        function generateRealisticQR() {
+            const matrixContainer = document.getElementById('qrMatrix');
+            matrixContainer.innerHTML = '';
+            
+            const size = 25;
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'q-cell';
+
+                    const isTopLeft = (r < 7 && c < 7);
+                    const isTopRight = (r < 7 && c >= size - 7);
+                    const isBottomLeft = (r >= size - 7 && c < 7);
+
+                    if (isTopLeft || isTopRight || isBottomLeft) {
+                        const localR = isTopLeft ? r : (isTopRight ? r : r - (size - 7));
+                        const localC = isTopLeft ? c : (isTopRight ? c - (size - 7) : c);
+
+                        if (localR === 0 || localR === 6 || localC === 0 || localC === 6) {
+                            cell.classList.add('q-black');
+                        } else if (localR >= 2 && localR <= 4 && localC >= 2 && localC <= 4) {
+                            cell.classList.add('q-black');
+                        }
+                    } else {
+                        const hash = (r * 31 + c * 17 + (r ^ c) * 13) % 100;
+                        if (hash > 48) {
+                            cell.classList.add('q-black');
+                        }
+                    }
+                    matrixContainer.appendChild(cell);
+                }
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("mySidebar");
+            sidebar.style.width = sidebar.style.width === "250px" ? "0" : "250px";
+        }
+
+        function switchTab(tab) {
+            const activeSec = document.getElementById('active-bookings');
+            const pastSec = document.getElementById('past-bookings');
+            const activeBtn = document.getElementById('tab-active-btn');
+            const pastBtn = document.getElementById('tab-past-btn');
+
+            if (tab === 'active') {
+                activeSec.style.display = 'block';
+                pastSec.style.display = 'none';
+                activeBtn.classList.add('active');
+                pastBtn.classList.remove('active');
+            } else {
+                activeSec.style.display = 'none';
+                pastSec.style.display = 'block';
+                pastBtn.classList.add('active');
+                activeBtn.classList.remove('active');
+            }
+        }
+
+        function createCardHtml(collegeObj, dateInfo, lockerNum, pin, isPast = false) {
+            return `
+                <div class="booking-card">
+                    <div class="card-header">
+                        <div class="college-info">
+                            <div class="college-icon">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+                            <div class="college-title-group">
+                                <div class="college-name">${collegeObj.name}</div>
+                                <div class="locker-num-sub">لوكر ${lockerNum}</div>
+                            </div>
+                        </div>
+                        <span class="badge ${isPast ? 'badge-expired' : 'badge-active'}">
+                            ${isPast ? 'منتهي' : 'مؤكد'}
+                        </span>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail-box">
+                            <div class="detail-label">المبنى</div>
+                            <div class="detail-value">${collegeObj.building}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">اللوكر</div>
+                            <div class="detail-value">${lockerNum}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">التاريخ</div>
+                            <div class="detail-value">${dateInfo.date}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">الوقت</div>
+                            <div class="detail-value">${dateInfo.time}</div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-secondary" onclick="event.stopPropagation()">إدارة الحجز</button>
+                        <button class="btn btn-primary" onclick="openQrModal('${collegeObj.name}', '${lockerNum}', '${pin}')">رمز الدخول</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBookings() {
+            const activeContainer = document.getElementById('active-list');
+            const pastContainer = document.getElementById('past-list');
+
+            let activeHtml = '';
+            let pastHtml = '';
+
+            colleges.forEach((collegeObj, i) => {
+                const lockerNum = (i + 1) * 3 + 2;
+                const pin = `${Math.floor(1000 + Math.random() * 9000)}`.split('').join(' ');
+                
+                activeHtml += createCardHtml(collegeObj, activeDates[i], lockerNum, pin, false);
+                pastHtml += createCardHtml(collegeObj, pastDates[i], lockerNum + 10, pin, true);
+            });
+
+            activeContainer.innerHTML = activeHtml;
+            pastContainer.innerHTML = pastHtml;
+        }
+
+        function openQrModal(collegeTitle, locker, pin) {
+            document.getElementById('modal-college-name').textContent = `${collegeTitle} — لوكر ${locker}`;
+            document.getElementById('modal-pin-code').textContent = pin;
+            document.getElementById('qrModal').classList.add('active');
+        }
+
+        function closeModal(e) {
+            if (!e || e.target === document.getElementById('qrModal') || e.currentTarget.classList.contains('close-modal-btn')) {
+                document.getElementById('qrModal').classList.remove('active');
+            }
+        }
+
+        generateRealisticQR();
+        renderBookings();
+    </script>
+</body>
+</html>
